@@ -1,14 +1,14 @@
 {
-  "type": [
-    "manual": [
+  "type":{ 
+    "manual": {
       "y/n": "y"
-    ],
+    },
 
-    "automatic": [
+    "automatic": {
       "y/n": "n",
       "time_period": "5min"
-    ]
-  ],
+    }
+},
 
   "custom_location": "",
 
@@ -18,5 +18,5 @@
 
   },
 
-  "move_and_delete": "n",
+  "move_and_delete": "n"
 }
