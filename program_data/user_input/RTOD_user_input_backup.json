@@ -1,0 +1,22 @@
+{
+  "type": [
+    "manual": [
+      "y/n": "y"
+    ],
+
+    "automatic": [
+      "y/n": "n",
+      "time_period": "5min"
+    ]
+  ],
+
+  "custom_location": "",
+
+  "dont_move": [],
+
+  "custom": {
+
+  },
+
+  "move_and_delete": "n",
+}
