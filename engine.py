@@ -21,3 +21,6 @@ if activation["organizer"] == 'y':
 
 if activation["RTOD"] == 'y':
     subprocess.run([p, r"./RTOD/RTOD_main.py"])
+
+activation["organizer"] = "n"
+activation["RTOD"] = "n"

@@ -1,29 +1,16 @@
 {
-    "documents":{
-        "HTML": [".html5", ".html", ".htm", ".xhtml"], 
-        "DOCUMENTS": [".oxps", ".epub", ".pages", ".docx", ".doc", ".fdf",
-                    ".ods", ".odt", ".pwi", ".xsn", ".xps", ".dotx", ".docm",
-                    ".dox", ".rvg", ".rtf", ".rtfd", ".wpd", ".xls", ".xlsx",
-                    ".ppt", "pptx"], 
-        "PDF": [".pdf"], 
-        "PLAINTEXT": [".txt", ".in", ".out"], 
-        "PYTHON": [".py"], 
-        "XML": [".xml"], 
-        "EXE": [".exe"], 
-        "SHELL": [".sh"] 
-    },
+    "documents": [".html5", ".html", ".htm", ".xhtml", ".oxps", ".epub", ".pages", ".docx", ".doc", ".fdf", ".ods",
+                  ".odt", ".pwi", ".xsn", ".xps", ".dotx", ".docm", ".dox",
+                  ".rvg", ".rtf", ".rtfd", ".wpd", ".xls", ".xlsx", ".ppt",
+                  "pptx", ".txt", ".in", ".out", ".pdf", ".xml", ".exe", ".sh"],
 
-    "music":{
-        "AUDIO": [".aac", ".aa", ".aac", ".dvf", ".m4a", ".m4b", ".m4p", ".mp3", 
-              ".msv", "ogg", "oga", ".raw", ".vox", ".wav", ".wma"]
-    },
-
-    "pictures":{
-        "IMAGES": [".jpeg", ".jpg", ".tiff", ".gif", ".bmp", ".png", ".bpg", "svg", ".heif", ".psd"] 
-    },
-
-    "videos":{
-         "VIDEOS": [".avi", ".flv", ".wmv", ".mov", ".mp4", ".webm", ".vob", ".mng", 
-               ".qt", ".mpg", ".mpeg", ".3gp"] 
-    }
+    "music": [".aac", ".aa", ".aac", ".dvf", ".m4a", ".m4b", ".m4p", ".mp3",
+              ".msv", "ogg", "oga", ".raw", ".vox", ".wav", ".wma"],
+    
+    "pictures": [".jpeg", ".jpg", ".tiff", ".gif", ".bmp", ".png", ".bpg", "svg",
+               ".heif", ".psd"],
+    
+    "video": [".avi", ".flv", ".wmv", ".mov", ".mp4", ".webm", ".vob", ".mng",
+               ".qt", ".mpg", ".mpeg", ".3gp"]
+    
 }
