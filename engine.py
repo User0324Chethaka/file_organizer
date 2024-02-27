@@ -4,23 +4,21 @@ import platform
 
 file_path  = r"../activate.json"
 
-activation = None
+user_input = None
 with open(file_path, "r") as jf:
-    activation = json.load(jf)
-
-os_platform = platform.system()
+    user_input = json.load(jf)
 
 p = None
-if os_platform.lower == 'windows':
+if platform.system().lower() == 'windows':
     p = 'python' 
 else:
     p = 'python3'
 
-if activation["organizer"] == 'y':
+if user_input["organizer"] == 'y':
     subprocess.run([p, r"./organizer/organizer_main.py"])
 
-if activation["RTOD"] == 'y':
+if user_input["RTOD"] == 'y':
     subprocess.run([p, r"./RTOD/RTOD_main.py"])
 
-activation["organizer"] = "n"
-activation["RTOD"] = "n"
+user_input["organizer"] = "n"
+user_input["RTOD"] = "n"
