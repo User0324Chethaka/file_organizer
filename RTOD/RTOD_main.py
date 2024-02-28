@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 import platform
 import json
@@ -13,6 +13,7 @@ def read_input(path_: str) -> dict:
         rtrn: dict = json.load(jf)
 
     return rtrn
+
 
 def move_files(file_dict: dict) -> None:
     '''make a main dir inside the specidied dir by the user
@@ -51,6 +52,7 @@ def organize_files(file_ls: list[os.DirEntry]) -> None:
     
     move_files(file_dict)
 
+
 def get_files(path_: str, file_ls: list) -> None:
     ''' load all the movable files in memory / python list'''
 
@@ -63,7 +65,7 @@ def get_files(path_: str, file_ls: list) -> None:
             file_ls.append(item)
 
 
-def activation() -> None:
+def main() -> None:
     '''activate the program'''
 
     if platform.system().lower() == 'windows':
@@ -84,45 +86,6 @@ def activation() -> None:
     get_files(download_dir, file_ls)
 
     organize_files(file_ls)
-
-def calculate_delta() -> timedelta:
-    user_input: dict = read_input(r"../RTOD_user_input.json")
-    time_data: dict = user_input["time_period"]
-
-    for key, val in time_data.itmes():
-        if val and val.isdigit():
-            time_data[key] = float(val)
-        else:
-            time_data[key] = float(0)
-
-    delta: timedelta = timedelta(seconds=time_data["s"],
-                      minutes=time_data["min"],
-                      hours=time_data["h"],
-                      days=time_data["d"],
-                      weeks=time_data["w"])
-
-    return delta
-
-
-def main() -> None:
-
-    user_input: dict = read_input(r"../RTOD_user_input.json")
-
-    if user_input["automatic"].lower() == 'y':
-       while True:
-
-        user_input: dict = read_input(r"../RTOD_user_input.json")
-        if user_input["stop_auto"] == 'n':
-            break
-
-        activation()
-        last_run: datetime = datetime.now()
-
-        if datetime.now() >= last_run + calculate_delta():
-            activation()
-            last_run: datetime = datetime.now() 
-    else:
-        activation()
 
 
 if __name__ == "__main__": 
