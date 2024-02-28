@@ -8,9 +8,9 @@ import shutil
 def read_input(path_: str) -> dict:
     '''read the content of json files and return it'''
 
-    abs_path = os.path.abspath(path_) # get the absolute path
+    abs_path: str = os.path.abspath(path_) # get the absolute path
     with open(abs_path, "r") as jf:
-        rtrn = json.load(jf)
+        rtrn: dict = json.load(jf)
 
     return rtrn
 
@@ -19,31 +19,31 @@ def move_files(file_dict: dict) -> None:
     inside the main dir make a dir for each file type
     move files into the dirs they belong'''
 
-    user_input = read_input(r"../RTOD_user_input.json")
-    info = user_input["type_and_location"] 
-    main_name = str(datetime.now())
+    user_input: dict = read_input(r"../RTOD_user_input.json")
+    info: dict = user_input["type_and_location"] 
+    main_name: str = str(datetime.now())
 
     for key, val in file_dict.items():
-        location = info[key]
-        main_path = os.path.join(location, main_name)
+        location: str = info[key]
+        main_path: str = os.path.join(location, main_name)
         if not os.path.exists(main_path):
             os.makedirs(main_path)
         
-        sub_dir_name = key.upper()
-        sub_dir_path = os.path.join(main_path, sub_dir_name)
+        sub_dir_name: str = key.upper()
+        sub_dir_path: str = os.path.join(main_path, sub_dir_name)
         os.makedirs(sub_dir_path)
 
         for file in val:
             shutil.copy2(file.path, sub_dir_path)
 
 
-def organize_files(file_ls: list) -> None:
+def organize_files(file_ls: list[os.DirEntry]) -> None:
     ''' organize files into dictionary based on their file extention '''
     
-    file_dict = {}
+    file_dict: dict = {}
 
     for file in file_ls:
-        ext = file.name.split(".")[-1]
+        ext: str = file.name.split(".")[-1]
         if ext not in file_dict.keys():
             file_dict[ext] = []
 
@@ -53,6 +53,7 @@ def organize_files(file_ls: list) -> None:
 
 def get_files(path_: str, file_ls: list) -> None:
     ''' load all the movable files in memory / python list'''
+
     user_input = read_input(r"../RTOD_user_input.json")
 
     for item in os.scandir(path_):
@@ -63,30 +64,30 @@ def get_files(path_: str, file_ls: list) -> None:
 
 
 def activation() -> None:
-    user_input = read_input(r"../RTOD_user_input.json")
+    '''activate the program'''
 
     if platform.system().lower() == 'windows':
             # Get the absolute path of the user's profile directory
-            user_profile_dir = os.getenv('USERPROFILE')
+            user_profile_dir: str = os.getenv('USERPROFILE')
 
             # Join the profile directory with the standard "Downloads" directory name
-            download_dir = os.path.join(user_profile_dir, "Downloads")
+            download_dir: str = os.path.join(user_profile_dir, "Downloads")
         
     else:
         # Get the absolute path of the user's home directory
-        home_dir = os.path.expanduser("~")
+        home_dir  = os.path.expanduser("~")
 
         # Join the home directory with the standard "Downloads" directory name
-        download_dir = os.path.join(home_dir, "Downloads")
+        download_dir: str = os.path.join(home_dir, "Downloads")
 
-    file_ls = []
+    file_ls: list[os.DirEntry] = []
     get_files(download_dir, file_ls)
 
     organize_files(file_ls)
 
 def calculate_delta() -> timedelta:
-    user_input = read_input(r"../RTOD_user_input.json")
-    time_data = user_input["time_period"]
+    user_input: dict = read_input(r"../RTOD_user_input.json")
+    time_data: dict = user_input["time_period"]
 
     for key, val in time_data.itmes():
         if val and val.isdigit():
@@ -94,7 +95,7 @@ def calculate_delta() -> timedelta:
         else:
             time_data[key] = float(0)
 
-    delta = timedelta(seconds=time_data["s"],
+    delta: timedelta = timedelta(seconds=time_data["s"],
                       minutes=time_data["min"],
                       hours=time_data["h"],
                       days=time_data["d"],
@@ -105,23 +106,23 @@ def calculate_delta() -> timedelta:
 
 def main() -> None:
 
-    user_input = read_input(r"../RTOD_user_input.json")
+    user_input: dict = read_input(r"../RTOD_user_input.json")
 
-    if user_input["automatic"].lower() == 'n':
-        activation()
-    else:
+    if user_input["automatic"].lower() == 'y':
        while True:
 
-        user_input = read_input(r"../RTOD_user_input.json")
-        if user_input["stop_auto"] == 'y':
+        user_input: dict = read_input(r"../RTOD_user_input.json")
+        if user_input["stop_auto"] == 'n':
             break
 
         activation()
-        last_run = datetime.now()
+        last_run: datetime = datetime.now()
 
         if datetime.now() >= last_run + calculate_delta():
             activation()
-            last_run = datetime.now() 
+            last_run: datetime = datetime.now() 
+    else:
+        activation()
 
 
 if __name__ == "__main__": 
