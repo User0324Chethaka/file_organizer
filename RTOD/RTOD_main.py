@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import platform
 import json
@@ -8,7 +8,6 @@ import shutil
 def read_input(path_: str) -> dict:
     '''read the content of json files and return it'''
 
-    rtrn = None
     abs_path = os.path.abspath(path_) # get the absolute path
     with open(abs_path, "r") as jf:
         rtrn = json.load(jf)
@@ -21,7 +20,7 @@ def move_files(file_dict: dict) -> None:
     move files into the dirs they belong'''
 
     user_input = read_input(r"../RTOD_user_input.json")
-    info = user_input["type_and_location"] # dict
+    info = user_input["type_and_location"] 
     main_name = str(datetime.now())
 
     for key, val in file_dict.items():
@@ -63,7 +62,7 @@ def get_files(path_: str, file_ls: list) -> None:
             file_ls.append(item)
 
 
-def main() -> None:
+def activation() -> None:
     user_input = read_input(r"../RTOD_user_input.json")
 
     if platform.system().lower() == 'windows':
@@ -84,6 +83,45 @@ def main() -> None:
     get_files(download_dir, file_ls)
 
     organize_files(file_ls)
+
+def calculate_delta() -> timedelta:
+    user_input = read_input(r"../RTOD_user_input.json")
+    time_data = user_input["time_period"]
+
+    for key, val in time_data.itmes():
+        if val and val.isdigit():
+            time_data[key] = float(val)
+        else:
+            time_data[key] = float(0)
+
+    delta = timedelta(seconds=time_data["s"],
+                      minutes=time_data["min"],
+                      hours=time_data["h"],
+                      days=time_data["d"],
+                      weeks=time_data["w"])
+
+    return delta
+
+
+def main() -> None:
+
+    user_input = read_input(r"../RTOD_user_input.json")
+
+    if user_input["automatic"].lower() == 'n':
+        activation()
+    else:
+       while True:
+
+        user_input = read_input(r"../RTOD_user_input.json")
+        if user_input["stop_auto"] == 'y':
+            break
+
+        activation()
+        last_run = datetime.now()
+
+        if datetime.now() >= last_run + calculate_delta():
+            activation()
+            last_run = datetime.now() 
 
 
 if __name__ == "__main__": 
