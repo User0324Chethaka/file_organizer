@@ -52,17 +52,36 @@ def organize_files(file_ls: list[os.DirEntry]) -> None:
     
     move_files(file_dict)
 
+def edit_RTOD_moved_files(ls: list) -> None:
+    rel_file_path = r"../program_data/runtime_data/RTOD_moved_files.json"
+    abs_file_path = os.path.abspath(rel_file_path)
+
+    with open(abs_file_path, "a") as jf:
+        file_: dict = json.load(jf)
+
+        for item in ls:
+            file_["moved_files"].append(item)
 
 def get_files(path_: str, file_ls: list) -> None:
     ''' load all the movable files in memory / python list'''
 
-    user_input = read_input(r"../RTOD_user_input.json")
+    user_input: dict = read_input(r"../RTOD_user_input.json")
+    valid_types: list = list(user_input["type_and_location"].keys())
+
+    moved_files_dict: dict = read_input(r"../program_data/runtime_data/RTOD_moved_files.json")
+    moved_files: list[os.DirEntry] = moved_files_dict["moved_files"]
+    new_files: list[os.DirEntry] = []
 
     for item in os.scandir(path_):
+        ext: str = item.name.split(".")[-1]
+
         if item.is_dir() and os.listdir(item.path) != []:
             get_files(path_, file_ls)
-        elif item.is_file() and item.name.split(".")[-1] in user_input["type_and_location"].keys():
+        elif item.is_file() and ext in valid_types and item not in moved_files:
             file_ls.append(item)
+            new_files.append(item)
+
+    edit_RTOD_moved_files(new_files)
 
 
 def main() -> None:
