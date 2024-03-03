@@ -1,0 +1,12 @@
+{
+  "organizer": "y",
+  "RTOD": {
+    "activate": "y",
+    "automate": "n",
+    "run_within": {
+      "hrs": "",
+      "mins": "",
+      "secs": ""
+    } 
+  } 
+}
