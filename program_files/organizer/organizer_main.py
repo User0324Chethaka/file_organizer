@@ -18,7 +18,7 @@ def read_input(path_) -> dict:
 def move_files_2_back(path_, category, value, time_, *args):
     ''' move files according to the structure  '''
 
-    main_file_name = time_ 
+    main_file_name = f"organizer {time_}" 
     main_file_path = os.path.join(path_, main_file_name)
     if not os.path.exists(main_file_path):
         os.makedirs(main_file_path)

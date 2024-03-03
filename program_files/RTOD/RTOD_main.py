@@ -22,7 +22,7 @@ def move_files(file_dict: dict) -> None:
 
     user_input: dict = read_input(r"../RTOD_user_input.json")
     info: dict = user_input["type_and_location"] 
-    main_name: str = str(datetime.now())
+    main_name: str = f" RTOD {datetime.now()}"
 
     for key, val in file_dict.items():
         location: str = info[key]
