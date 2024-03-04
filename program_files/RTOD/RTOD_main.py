@@ -5,12 +5,19 @@ import json
 import shutil
 
 
-def read_input(path_: str) -> dict:
-    '''read the content of json files and return it'''
+def read_input(path_: str, file_type: str) -> dict|list[int]:
+    '''read the content of files and return it'''
 
     abs_path: str = os.path.abspath(path_) # get the absolute path
-    with open(abs_path, "r") as jf:
-        rtrn: dict = json.load(jf)
+    rtrn: None|dict|list[int] = None   
+
+    if file_type == 'j':
+        with open(abs_path, "r") as jf:
+            rtrn: dict = json.load(jf)
+    elif file_type == 't':
+        with open(abs_path, "r") as f:
+            lines: list = f.readlines() 
+            rtrn: list[int] = [int(line.strip()) for line in lines]
 
     return rtrn
 
@@ -51,6 +58,25 @@ def organize_files(file_ls: list[os.DirEntry]) -> None:
         file_dict[ext].append(file)
     
     move_files(file_dict)
+
+
+def write_to_inode_data(id_):
+    pass
+
+
+def did_move(path_) -> bool:
+    ''' check whether a file was moved during a previous runtime'''
+
+    moved_files: list[int] = read_input(path_, 't')
+
+    file_stat: os.stat_result = os.stat(path_)
+    indoe_id: int = file_stat.st_ino
+
+    if indoe_id not in moved_files:
+        write_to_inode_data(indoe_id)
+        return True
+    else:
+        return False
 
 
 def get_files(path_: str, file_ls: list) -> None:
