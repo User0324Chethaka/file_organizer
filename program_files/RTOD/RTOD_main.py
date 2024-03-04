@@ -60,11 +60,12 @@ def organize_files(file_ls: list[os.DirEntry]) -> None:
     move_files(file_dict)
 
 
-def write_to_inode_data(id_):
-    pass
+def write_to_inode_data(inode_id):
+    with open(os.path.abspath(r"./inode_data.txt"), "a") as f:
+        f.write(inode_id)
 
 
-def did_move(path_) -> bool:
+def did_not_move(path_) -> bool:
     ''' check whether a file was moved during a previous runtime'''
 
     moved_files: list[int] = read_input(path_, 't')
@@ -90,7 +91,7 @@ def get_files(path_: str, file_ls: list) -> None:
 
         if item.is_dir() and os.listdir(item.path) != []:
             get_files(path_, file_ls)
-        elif item.is_file() and ext in valid_types:
+        elif item.is_file() and ext in valid_types and did_not_move(item.path):
             file_ls.append(item)
 
 
