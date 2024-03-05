@@ -5,7 +5,7 @@ import json
 import shutil
 
 
-def read_input(path_: str, file_type: str) -> dict|list[int]:
+def read_input(path_: str, file_type: str) -> dict|list[int]|None:
     '''read the content of files and return it'''
 
     abs_path: str = os.path.abspath(path_) # get the absolute path
@@ -15,9 +15,13 @@ def read_input(path_: str, file_type: str) -> dict|list[int]:
         with open(abs_path, "r") as jf:
             rtrn: dict = json.load(jf)
     elif file_type == 't':
-        with open(abs_path, "r") as f:
-            lines: list = f.readlines() 
-            rtrn: list[int] = [int(line.strip()) for line in lines]
+        # for the 1st time program running
+        if os.path.getsize(abs_path) == 0:
+            rtrn = None
+        else: 
+            with open(abs_path, "r", encoding='utf-8') as f:
+                lines: list = f.readlines() 
+                rtrn: list[int] = [int(line.strip()) for line in lines]
 
     return rtrn
 
@@ -27,7 +31,7 @@ def move_files(file_dict: dict) -> None:
     inside the main dir make a dir for each file type
     move files into the dirs they belong'''
 
-    user_input: dict = read_input(r"../RTOD_user_input.json")
+    user_input: dict = read_input(r"../RTOD_user_input.json", 'j')
     info: dict = user_input["type_and_location"] 
     main_name: str = f" RTOD {datetime.now()}"
 
@@ -61,20 +65,27 @@ def organize_files(file_ls: list[os.DirEntry]) -> None:
 
 
 def write_to_inode_data(inode_id):
-    with open(os.path.abspath(r"./inode_data.txt"), "a") as f:
-        f.write(inode_id)
+    ''' update inode_data.txt file'''
+
+    abs_path = os.path.abspath(r"./RTOD/inode_data.txt")
+    with open(abs_path, "a", encoding='utf-8') as f:
+        f.write(f"{str(inode_id)}\n")
 
 
 def did_not_move(path_) -> bool:
     ''' check whether a file was moved during a previous runtime'''
 
-    moved_files: list[int] = read_input(path_, 't')
+    inode_data_file_path = os.path.abspath(r"./RTOD/inode_data.txt")
+    inode_data: list[int]|None = read_input(inode_data_file_path, 't')
+    moved_files: list = inode_data if inode_data else []
 
     file_stat: os.stat_result = os.stat(path_)
-    indoe_id: int = file_stat.st_ino
+    inode_id: int = file_stat.st_ino
 
-    if indoe_id not in moved_files:
-        write_to_inode_data(indoe_id)
+    print(len(moved_files))
+
+    if inode_id not in moved_files:
+        write_to_inode_data(inode_id)
         return True
     else:
         return False
@@ -83,7 +94,7 @@ def did_not_move(path_) -> bool:
 def get_files(path_: str, file_ls: list) -> None:
     ''' load all the movable files in memory / python list'''
 
-    user_input: dict = read_input(r"../RTOD_user_input.json")
+    user_input: dict = read_input(r"../RTOD_user_input.json", 'j')
     valid_types: list = list(user_input["type_and_location"].keys())
 
     for item in os.scandir(path_):
