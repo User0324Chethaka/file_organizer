@@ -72,21 +72,22 @@ def write_to_inode_data(inode_id):
         f.write(f"{str(inode_id)}\n")
 
 
-def did_not_move(path_) -> bool:
+def get_item_data(path_: str) -> tuple[bool, int]:
     ''' check whether a file was moved during a previous runtime'''
 
-    inode_data_file_path = os.path.abspath(r"./RTOD/inode_data.txt")
+    inode_data_file_path: str = os.path.abspath(r"./RTOD/inode_data.txt")
     inode_data: list[int]|None = read_input(inode_data_file_path, 't')
+
+    # moved_files = [] if inode_data = None
     moved_files: list = inode_data if inode_data else []
 
     file_stat: os.stat_result = os.stat(path_)
     inode_id: int = file_stat.st_ino
 
     if inode_id not in moved_files:
-        write_to_inode_data(inode_id)
-        return True
+        return True, inode_id
     else:
-        return False
+        return False, None
 
 
 def get_files(path_: str, file_ls: list) -> None:
@@ -96,12 +97,18 @@ def get_files(path_: str, file_ls: list) -> None:
     valid_types: list = list(user_input["type_and_location"].keys())
 
     for item in os.scandir(path_):
+        # get file extention
         ext: str = item.name.split(".")[-1]
+        
+        did_not_move: bool
+        inode_id: int|None
+        did_not_move, inode_id = get_item_data(item.path)
 
         if item.is_dir() and os.listdir(item.path) != []:
             get_files(path_, file_ls)
-        elif item.is_file() and ext in valid_types and did_not_move(item.path):
+        elif item.is_file() and ext in valid_types and did_not_move:
             file_ls.append(item)
+            write_to_inode_data(inode_id)
 
 
 def main() -> None:
@@ -124,6 +131,7 @@ def main() -> None:
     file_ls: list[os.DirEntry] = []
     get_files(download_dir, file_ls)
 
+    # organize_files displays unexpected behaviour if called inside get_files()
     organize_files(file_ls)
 
 
