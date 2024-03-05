@@ -82,8 +82,6 @@ def did_not_move(path_) -> bool:
     file_stat: os.stat_result = os.stat(path_)
     inode_id: int = file_stat.st_ino
 
-    print(len(moved_files))
-
     if inode_id not in moved_files:
         write_to_inode_data(inode_id)
         return True
